@@ -134,6 +134,8 @@ public class AdmController {
 	@GetMapping("/editfaculty/{id}")
 	public String editFacultyForm(Model model, @PathVariable("id") Integer id) {
 		Faculty fac=facrepo.findById(id).get();
+		
+		model.addAttribute("departmentlist",dlist);
 		model.addAttribute("faculty",fac);
 				
 		return "facultyform";
@@ -180,6 +182,8 @@ public class AdmController {
 		Course cou=new Course();
 		Faculty abs=new Faculty();
 		cou.setCurrentFaculty(abs);
+		
+		model.addAttribute("departmentlist",dlist);
 		model.addAttribute("course",cou);
 		
 		
@@ -203,6 +207,8 @@ public class AdmController {
 	@GetMapping("/editcourse/{id}")
 	public String editCourseForm(Model model, @PathVariable("id") Integer id) {
 		Course cou=courepo.findById(id).get();
+		
+		model.addAttribute("departmentlist",dlist);
 		model.addAttribute("course",cou);
 		return "courseform";
 	}
