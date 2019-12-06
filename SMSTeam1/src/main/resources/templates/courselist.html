@@ -28,14 +28,16 @@
  	<h1>Course List</h1>
  	<table>
  		<tr>
- 			<td>Course Name</td><td>Course Code</td><td>Department</td><td>Course Unit</td>
+ 			<td>Course Name</td><td>Course Code</td><td>Department</td><td>Course Unit</td><td>Faculty In Charge</td>
  		</tr>
  		<tr th:each="course:${courses}">
  			<td th:text=${course.courseName}>Course Name</td>
  			<td th:text=${course.courseCode}>Course Code</td>
  			<td th:text=${course.department}>Department</td>
  			<td th:text=${course.courseUnit}>Course Unit</td>
+ 			<td th:text=${course.currentFaculty}>Faculty In Charge</td>
  			
+ 			<td><a href="#" th:href="@{/admin/assignfaculty/}+${course.id}"> AssignFaculty</a></td>
  			<td><a href="#" th:href="@{/admin/editcourse/}+${course.id}" >Edit</a></td>
  			<td><a href="#" th:href="@{/admin/deletecourse/}+${course.id}" >Delete</a></td>
  			</tr>

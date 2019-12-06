@@ -26,7 +26,17 @@ public class Faculty extends User {
 	@OneToMany(mappedBy="currentFaculty")
 	private List<Course> coursesInCharge;
 	
+	@OneToMany(mappedBy="faculty")
+    private List<LeaveApp> leaves;
 
+
+	public List<LeaveApp> getLeaves() {
+		return leaves;
+	}
+
+	public void setLeaves(List<LeaveApp> leaves) {
+		this.leaves = leaves;
+	}
 
 	public int getFacultyID() {
 		return facultyID;
@@ -76,6 +86,8 @@ public class Faculty extends User {
 
 	public Faculty() {
 		super();
+		this.firstName="Absent";
+		
 		// TODO Auto-generated constructor stub
 	}
 
@@ -88,7 +100,7 @@ public class Faculty extends User {
 
 	@Override
 	public String toString() {
-		return "Faculty [firstName=" + firstName + ", lastName=" + lastName + "]";
+		return "[" + firstName + "," + lastName + "]";
 	}
 
 

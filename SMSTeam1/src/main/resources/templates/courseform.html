@@ -17,14 +17,16 @@
 	</fieldset>
 	
     <fieldset>
-		Department: <input type="text" th:field="*{department}">
-		<p th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></p>
+		Department: <select th:field="*{department}">
+		<option th:each="dep:${departmentlist}" th:value="${dep}" th:text="${dep}"></option>
+		</select>
 	</fieldset>
 	
 	<fieldset>
 		Unit: <input type="text" th:field="*{courseUnit}">
 		<p th:if="${#fields.hasErrors('courseUnit')}" th:errors="*{courseUnit}"></p>
 	</fieldset>
+	
 	
 	
 	<fieldset>

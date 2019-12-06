@@ -8,6 +8,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.sun.istack.NotNull;
+
 @Entity
 public class LeaveApp {
 	
@@ -16,10 +21,16 @@ public class LeaveApp {
 	private int id;
 	
 	@ManyToOne
-	private User user;
+	private Faculty faculty;
 	
+	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date startDate;
-	private Date duration;
+	
+	@NotNull
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date endDate;
+	
 	private String status;
 	
 	
@@ -36,11 +47,14 @@ public class LeaveApp {
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
 	}
-	public Date getDuration() {
-		return duration;
+
+	
+	
+	public Date getEndDate() {
+		return endDate;
 	}
-	public void setDuration(Date duration) {
-		this.duration = duration;
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
 	}
 	public String getStatus() {
 		return status;
@@ -52,23 +66,27 @@ public class LeaveApp {
 	
 	
 	
-	public User getUser() {
-		return user;
+
+	
+	public Faculty getFaculty() {
+		return faculty;
 	}
-	public void setUser(User user) {
-		this.user = user;
+	public void setFaculty(Faculty faculty) {
+		this.faculty = faculty;
 	}
 	public LeaveApp() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public LeaveApp(User user, Date startDate, Date duration, String status) {
+	public LeaveApp(int id, Faculty faculty, Date startDate, Date endDate) {
 		super();
-		this.user = user;
+		this.id = id;
+		this.faculty = faculty;
 		this.startDate = startDate;
-		this.duration = duration;
-		this.status = status;
+		this.endDate = endDate;
 	}
+
+
 
 	
 	

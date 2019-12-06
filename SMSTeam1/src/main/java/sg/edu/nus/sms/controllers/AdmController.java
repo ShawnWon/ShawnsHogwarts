@@ -1,6 +1,8 @@
 package sg.edu.nus.sms.controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -20,9 +22,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import sg.edu.nus.sms.model.Course;
 import sg.edu.nus.sms.model.Faculty;
+import sg.edu.nus.sms.model.LeaveApp;
 import sg.edu.nus.sms.model.Students;
 import sg.edu.nus.sms.repo.CourseRepository;
 import sg.edu.nus.sms.repo.FacultyRepository;
+import sg.edu.nus.sms.repo.LeaveAppRepository;
 import sg.edu.nus.sms.repo.StudentsRepository;
 
 @Controller
@@ -40,11 +44,17 @@ public class AdmController {
 	@Autowired
 	private CourseRepository courepo;
 	
+	@Autowired
+	private LeaveAppRepository learepo;
+	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		
 		
 	}
+	
+	static List dlist= Arrays.asList("Physics","Chemistry","Magic","Literature");
+	
 	
 	//////////////////////////////////////////Student
 	
@@ -117,7 +127,7 @@ public class AdmController {
 	public String addFacultyForm(Model model) {
 		Faculty fac=new Faculty();
 		model.addAttribute("faculty",fac);
-				
+		model.addAttribute("departmentlist",dlist);
 		return "facultyform";
 	}
 	
@@ -168,16 +178,32 @@ public class AdmController {
 	@GetMapping("/addcourse")
 	public String addCourseForm(Model model) {
 		Course cou=new Course();
+		Faculty abs=new Faculty();
+		cou.setCurrentFaculty(abs);
 		model.addAttribute("course",cou);
+		
+		
 				
 		return "courseform";
 	}
+	
+	@GetMapping("/assignfaculty/{id}")
+	public String assignfaculty(Model model,@PathVariable("id") Integer id) {
+		Course cou=courepo.findById(id).get();
+		model.addAttribute("course", cou);
+		ArrayList<Faculty> facsdepart=facrepo.findByDepartment(cou.getDepartment());
+		model.addAttribute("facsofdepartment", facsdepart);
+		
+		model.addAttribute("departmentlist",dlist);
+		
+		return "assignfacultyform";
+	}
+	
 	
 	@GetMapping("/editcourse/{id}")
 	public String editCourseForm(Model model, @PathVariable("id") Integer id) {
 		Course cou=courepo.findById(id).get();
 		model.addAttribute("course",cou);
-				
 		return "courseform";
 	}
 	
@@ -208,10 +234,71 @@ public class AdmController {
 	}
 	
 	
-	/////////////////////////////////////////Leave application
-	@GetMapping("/applicationlist")
-	public String listcourseapplication() {
+	@RequestMapping(value="/saveassign",path="/saveassign", method= {RequestMethod.GET, RequestMethod.POST}, produces="text/html")
+	public String saveAssign(@ModelAttribute Course cou) {
 		
+		Course c1= courepo.findByCourseCode(cou.getCourseCode());
+		
+		if(c1!=null) cou.setId(c1.getId());
+		
+		
+		courepo.save(cou);
+		
+		return "forward:/admin/courselist";
+	}
+	
+	/////////////////////////////////////////Leave application
+	
+	@GetMapping("/applicationlist")
+	public String listleaveapp(Model model) {
+
+		ArrayList<LeaveApp> lealist=new ArrayList<LeaveApp>();
+		ArrayList<LeaveApp> alllealist=new ArrayList<LeaveApp>();
+		lealist.addAll(learepo.findByStatus("Pending"));
+		alllealist.addAll(learepo.findAll());
+		model.addAttribute("leaveapps",lealist);
+		model.addAttribute("allleaveapps",alllealist);
 		return "applicationlist";
+	}
+	
+	
+
+	
+	@GetMapping("/approveleaveapp/{id}")
+	public String approveLeaveAppForm(Model model, @PathVariable("id") Integer id) {
+		LeaveApp leaapp=learepo.findById(id).get();
+		leaapp.setStatus("Approved");
+		learepo.save(leaapp);
+		model.addAttribute("leaveapp",leaapp);
+				
+		return "forward:/admin/applicationlist";
+	}
+	
+	@GetMapping("/rejectleaveapp/{id}")
+	public String rejectLeaveAppForm(Model model, @PathVariable("id") Integer id) {
+		LeaveApp leaapp=learepo.findById(id).get();
+		leaapp.setStatus("Rejected");
+		learepo.save(leaapp);
+		model.addAttribute("leaveapp",leaapp);
+				
+		return "forward:/admin/applicationlist";
+	}
+
+	
+	
+	@RequestMapping(value="/saveleaveapp",path="/saveleaveapp", method= {RequestMethod.GET, RequestMethod.POST}, produces="text/html")
+	public String saveLeaveApp(@Valid @ModelAttribute LeaveApp lea, BindingResult bindingResult) {
+		
+		if(bindingResult.hasErrors())
+		{
+			return "leaveappform";
+		}
+		
+		Faculty f1=facrepo.findByFirstName("Jon");
+		lea.setFaculty(f1);
+		
+		learepo.save(lea);
+		
+		return "forward:/admin/applicationlist";
 	}
 }

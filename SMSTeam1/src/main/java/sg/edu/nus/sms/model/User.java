@@ -23,12 +23,7 @@ public class User {
 	private String userName;
 	private String passWord;
 	
-	@OneToMany(mappedBy="user")
-    private List<LeaveApp> leaves;
 	
-    
-	
-
 	public int getId() {
 		return id;
 	}
@@ -52,11 +47,11 @@ public class User {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public User(String userName, String passWord, List<LeaveApp> leaves) {
+	public User(String userName, String passWord) {
 		super();
 		this.userName = userName;
 		this.passWord = passWord;
-		this.leaves = leaves;
+		
 	}
 
 	
