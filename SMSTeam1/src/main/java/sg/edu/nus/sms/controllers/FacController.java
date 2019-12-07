@@ -2,6 +2,7 @@ package sg.edu.nus.sms.controllers;
 
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +14,22 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import sg.edu.nus.sms.model.Course;
 import sg.edu.nus.sms.model.Faculty;
 import sg.edu.nus.sms.model.LeaveApp;
+import sg.edu.nus.sms.model.Students;
+import sg.edu.nus.sms.model.User;
+import sg.edu.nus.sms.model.UserSession;
+import sg.edu.nus.sms.repo.CourseRepository;
 import sg.edu.nus.sms.repo.FacultyRepository;
 import sg.edu.nus.sms.repo.LeaveAppRepository;
+import sg.edu.nus.sms.repo.StudentCourseRepository;
 
 @Controller
-@SessionAttributes("user")
+@SessionAttributes("usersession")
 @RequestMapping("/faculty")
 public class FacController {
 	
@@ -31,15 +39,24 @@ public class FacController {
 	@Autowired
 	private FacultyRepository facrepo;
 	
+	@Autowired
+	private CourseRepository courepo;
 	
+	@Autowired
+	private StudentCourseRepository stucourepo;
 	
+	////////////////////////Courses
 	
 	@GetMapping("/assignedcourses")
-	public String assignedCourses() {
+	public String assignedCourses(Model model,@SessionAttribute UserSession usersession) {
 		
+		Faculty fac=facrepo.findById(usersession.getId()).get();
+		ArrayList<Course> mycourses=courepo.findAllByCurrentFaculty(fac);
+		model.addAttribute("mycourses",mycourses);
 		return "assignedcourses";
 	}
 	
+	///////////////////////////////////Leave Application
 	@GetMapping("/addleaveapp")
 	public String addLeaveAppForm(Model model) {
 		LeaveApp leaapp=new LeaveApp();
@@ -89,5 +106,20 @@ public class FacController {
 		
 		return "forward:/faculty/myleaveapps";
 	}
+	
+	////////////////////////////Student grade
+	@GetMapping("/coursestulist/{id}")
+	public String courseStuList(@PathVariable("id") Integer id, Model model,@SessionAttribute UserSession usersession) {
+		
+		
+		
+		//Faculty fac=facrepo.findById(usersession.getId()).get();
+		Course cou=courepo.findById(id).get();
+		ArrayList<Students> coursestudentlist=stucourepo.findAllByCourse(cou);
+		model.addAttribute("coursename",cou.getCourseName());
+		model.addAttribute("stulist",coursestudentlist);
+		return "coursestulist";
+	}
+	
 
 }

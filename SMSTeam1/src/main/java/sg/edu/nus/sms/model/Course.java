@@ -132,6 +132,11 @@ public class Course {
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "[" + courseCode + ", " + courseName + ", " + department + "]";
+	}
+
 
 
 	

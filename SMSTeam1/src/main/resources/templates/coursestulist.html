@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta charset="ISO-8859-1">
-<title>Assigned Courses</title>
+<title>Student List of Course</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="w3.css">
 </head>
@@ -10,28 +10,29 @@
 
 	<div th:fragment="home" class="w3-pale-blue w3-card">
 		<div class="w3-container w3-tangerine">
-			<p class="w3-large" align="center">Assigned Courses</p>
+			<p class="w3-large" align="center">Student List of Course</p>
 		</div>
 	</div>
  
  	<div class="w3-container" align="center">
- 		<h1 align="center">The courses assigned to me</h1>
+ 		<h1 align="center">The student list of course</h1>
  		<a href="#" th:href="@{/faculty/myleaveapps}" >My Leave Application</a><br/>
 
 			
  	</div>
  	
  		<div class="w3-container" align="center">
- 	<h1>My Course List</h1>
+ 	<h1>Student List</h1>
  	<table>
+ 	<tr><td th:text=${coursename}>Course Name</tr>
  		<tr>
- 			<td>Course Name</td><td>Course Code</td>
+ 			<td>Student Name</td><td>Grade</td>
  		</tr>
- 		<tr th:each="course:${mycourses}">
- 			<td th:text=${course.courseName}>Course Name</td>
- 			<td th:text=${course.courseCode}>Course Code</td>
+ 		<tr th:each="stu:${stulist}">
+ 			<td th:text=${stu.students}>Student Name</td>
+ 			<td th:text=${stu.grade}>Grade</td>
  			
- 			<td><a href="#" th:href="@{/faculty/coursestulist/}+${course.id}">Student List</a></td>
+ 			<td><a href="#" th:href="@{/faculty/markgrade/}+${stu.id}"> Mark Grades</a></td>
  			</tr>
  			
  	</table>

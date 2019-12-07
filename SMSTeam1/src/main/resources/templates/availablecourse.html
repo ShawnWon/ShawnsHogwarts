@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Course Enrollment</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+</head>
+<body>
+
+	<div th:fragment="home" class="w3-pale-blue w3-card">
+		<div class="w3-container w3-tangerine">
+			<p class="w3-large" align="center">Course Enrollment</p>
+		</div>
+	</div>
+ 
+ 	<div class="w3-container" align="center">
+ 		<h1 align="center">Course Enrollment</h1>
+ 		
+ 		<a href="#" th:href="@{/faculty/assignedcourses}" >CGPA</a><br/>
+ 		<a href="#" th:href="@{/faculty/studentgrade}" >Copy of Grades</a><br/>
+		<a href="#" th:href="@{/faculty/addleaveapp}" >LogOut</a><br/>
+		
+		
+ 	</div>
+ 	
+ 	<div class="w3-container" align="center">
+ 	<h1>Available Courses</h1>
+ 	<table>
+ 		<tr>
+ 			<td>Course Info</td><td>Status</td>
+ 		</tr>
+ 		<tr th:each="stucourse:${availcourses}">
+ 			<td th:text="${stucourse.course.toString()}">Course Info</td>
+ 			<td th:text="${stucourse.status}">Status</td>
+ 			
+ 			
+ 			<td><a href="#" th:href="@{/student/applycourse/}+${stucourse.id}" >Apply</a></td>
+ 		
+ 			</tr>
+ 			<tr>
+ 			
+ 			</tr>
+ 	</table>
+ 	</div>
+ 	
+ 	<div class="w3-container" align="center">
+ 	<h1>My Application</h1>
+ 	<table>
+ 		<tr>
+ 			<td>Course Info</td><td>Status</td>
+ 		</tr>
+ 		<tr th:each="courseapp:${mycourseapps}">
+ 		
+ 			
+ 			<td th:text=${courseapp.course.toString()}>Course Info</td>
+ 			
+ 			
+ 			<td th:text="${courseapp.status}">Status</td>
+ 			
+ 			
+ 		
+ 			</tr>
+ 			<tr>
+ 			
+ 			</tr>
+ 	</table>
+ 	</div>
+ 	
+ 	<div th:fragment="copyright">
+ 		<p class="w3-wide" align="center">&copy; 2019 ISS, NUS, All Rights Reserved</p>
+ 	</div>
+</body>
+</html>

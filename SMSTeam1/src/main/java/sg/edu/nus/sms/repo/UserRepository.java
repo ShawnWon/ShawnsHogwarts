@@ -6,4 +6,6 @@ import sg.edu.nus.sms.model.User;
 
 public interface UserRepository extends JpaRepository<User,Integer> {
 
+	User findByUserName(String userName);
+
 }

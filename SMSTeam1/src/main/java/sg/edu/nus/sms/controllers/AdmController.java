@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import sg.edu.nus.sms.model.Course;
 import sg.edu.nus.sms.model.Faculty;
 import sg.edu.nus.sms.model.LeaveApp;
+import sg.edu.nus.sms.model.StudentCourse;
 import sg.edu.nus.sms.model.Students;
 import sg.edu.nus.sms.repo.CourseRepository;
 import sg.edu.nus.sms.repo.FacultyRepository;
 import sg.edu.nus.sms.repo.LeaveAppRepository;
+import sg.edu.nus.sms.repo.StudentCourseRepository;
 import sg.edu.nus.sms.repo.StudentsRepository;
 
 @Controller
@@ -46,6 +48,9 @@ public class AdmController {
 	
 	@Autowired
 	private LeaveAppRepository learepo;
+	
+	@Autowired
+	private StudentCourseRepository stucourepo;
 	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
@@ -88,6 +93,16 @@ public class AdmController {
 		if(s1!=null) stu.setId(s1.getId());
 		
 		sturepo.save(stu);
+		
+		////////////////Initiate course application list for each student
+		List<Course> coulist=courepo.findAll();
+		
+		for(Course cou:coulist) {
+			StudentCourse stucou=new StudentCourse();
+			stucou.setStudent(stu);
+			stucou.setCourse(cou);
+			stucourepo.save(stucou);
+		}
 		
 		return "forward:/admin/studentlist";
 	}

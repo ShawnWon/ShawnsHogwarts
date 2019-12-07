@@ -98,6 +98,11 @@ public class Students extends User{
 		
 		
 	}
+
+	@Override
+	public String toString() {
+		return "[" + firstName + "," + lastName + "]";
+	}
 	
 	
 

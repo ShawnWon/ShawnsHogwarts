@@ -67,8 +67,18 @@ public class StudentCourse {
 
 
 
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public StudentCourse() {
 		super();
+		this.grade="NA";
+		this.status="Available";
 		// TODO Auto-generated constructor stub
 	}
 

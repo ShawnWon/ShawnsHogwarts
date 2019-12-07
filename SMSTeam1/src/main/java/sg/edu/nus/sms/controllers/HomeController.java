@@ -2,6 +2,7 @@ package sg.edu.nus.sms.controllers;
 
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,13 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import sg.edu.nus.sms.model.Course;
 import sg.edu.nus.sms.model.User;
 import sg.edu.nus.sms.model.UserSession;
+import sg.edu.nus.sms.repo.UserRepository;
 
 @Controller
 @SessionAttributes("usersession")
 @RequestMapping("/home")
 public class HomeController {
+	
+	@Autowired
+	private UserRepository userrepo;
+	
 	
 	@GetMapping("/index")
 	public String index() {
@@ -35,6 +42,11 @@ public class HomeController {
 	@RequestMapping(value="/authenticate", path="/authenticate",method= {RequestMethod.GET, RequestMethod.POST}, produces="text/html")
 	public String getAuthentication(@ModelAttribute("user") User user, HttpSession session, BindingResult bindingResult)
 	{
+		User u1= userrepo.findByUserName(user.getUserName());
+		
+		if(u1!=null) user.setId(u1.getId());
+		
+		
 		if(bindingResult.hasErrors()) {
 			return "login";
 		}
