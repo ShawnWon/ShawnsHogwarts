@@ -120,6 +120,12 @@ public class AdmController {
 	@GetMapping("/deletestudent/{id}")
 	public String deleteStudent(Model model, @PathVariable("id") Integer id) {
 		Students stu=sturepo.findById(id).get();
+		
+		//remove correlated stu_course record before remove course record.
+		List<StudentCourse> stucoulist=stucourepo.findAllByStudent(stu);
+		stucourepo.deleteAll(stucoulist);
+		
+		
 		sturepo.delete(stu);
 		
 		
@@ -231,8 +237,17 @@ public class AdmController {
 	
 	@GetMapping("/deletecourse/{id}")
 	public String deleteCourse(Model model, @PathVariable("id") Integer id) {
+		
 		Course cou=courepo.findById(id).get();
+		
+		//remove correlated stu_course record before remove course record.
+		List<StudentCourse> stucoulist=stucourepo.findAllByCourse(cou);
+		stucourepo.deleteAll(stucoulist);
+		
 		courepo.delete(cou);
+		
+		
+		
 		return "forward:/admin/courselist";
 	}
 	

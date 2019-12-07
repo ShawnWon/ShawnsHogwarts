@@ -1,6 +1,8 @@
 package sg.edu.nus.sms.controllers;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import sg.edu.nus.sms.model.Course;
 import sg.edu.nus.sms.model.Faculty;
 import sg.edu.nus.sms.model.LeaveApp;
+import sg.edu.nus.sms.model.StudentCourse;
 import sg.edu.nus.sms.model.Students;
 import sg.edu.nus.sms.model.User;
 import sg.edu.nus.sms.model.UserSession;
@@ -27,6 +30,7 @@ import sg.edu.nus.sms.repo.CourseRepository;
 import sg.edu.nus.sms.repo.FacultyRepository;
 import sg.edu.nus.sms.repo.LeaveAppRepository;
 import sg.edu.nus.sms.repo.StudentCourseRepository;
+import sg.edu.nus.sms.repo.StudentsRepository;
 
 @Controller
 @SessionAttributes("usersession")
@@ -44,6 +48,12 @@ public class FacController {
 	
 	@Autowired
 	private StudentCourseRepository stucourepo;
+	
+	@Autowired
+	private StudentsRepository sturepo;
+	
+	
+	static List gralist= Arrays.asList("A","B","C","D","F");
 	
 	////////////////////////Courses
 	
@@ -111,15 +121,57 @@ public class FacController {
 	@GetMapping("/coursestulist/{id}")
 	public String courseStuList(@PathVariable("id") Integer id, Model model,@SessionAttribute UserSession usersession) {
 		
-		
-		
-		//Faculty fac=facrepo.findById(usersession.getId()).get();
 		Course cou=courepo.findById(id).get();
-		ArrayList<Students> coursestudentlist=stucourepo.findAllByCourse(cou);
+		List<StudentCourse> stucoulist=stucourepo.findAllByCourse(cou);
+		List<StudentCourse> valistucoulist=new ArrayList<StudentCourse>();
+		List<StudentCourse> managedstucoulist=new ArrayList<StudentCourse>();
+		
+		for(StudentCourse stucou:stucoulist)
+		{
+			if(stucou.getStatus().equals("Approved")) valistucoulist.add(stucou);
+			else if(stucou.getStatus().equals("Graded")) managedstucoulist.add(stucou);
+		
+			
+		}
 		model.addAttribute("coursename",cou.getCourseName());
-		model.addAttribute("stulist",coursestudentlist);
+		model.addAttribute("valistucoulist",valistucoulist);
+		model.addAttribute("managedstucoulist",managedstucoulist);
+		
 		return "coursestulist";
 	}
+	
+	@GetMapping("/markgrade/{id}")
+	public String markGrade(@PathVariable("id") Integer id,Model model) {
+		
+		StudentCourse stucou=stucourepo.findById(id).get();
+		
+		Course cou=courepo.findById(stucou.getCourse().getId()).get();
+		model.addAttribute("course", cou);
+		
+		
+		model.addAttribute("stucou",stucou);
+		model.addAttribute("gralist",gralist);
+		
+		return "markgradeform";
+	}
+	
+
+	@RequestMapping(value="/savegrade",path="/savegrade", method= {RequestMethod.GET, RequestMethod.POST}, produces="text/html")
+	public String savegrade(@ModelAttribute StudentCourse stucou) {
+		
+		Students stu=sturepo.findById(stucou.getStudent().getId()).get();
+		Course cou=courepo.findById(stucou.getCourse().getId()).get();
+		StudentCourse temp1= stucourepo.findByCourseAndStudent(cou,stu);
+		
+		//if(temp1!=null) stucou.setId(temp1.getId());
+		
+		temp1.setGrade(stucou.getGrade());
+		temp1.setStatus("Graded");
+		stucourepo.save(temp1);
+		
+		return "forward:/faculty/coursestulist/"+stucou.getCourse().getId();
+	}
+
 	
 
 }

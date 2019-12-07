@@ -22,17 +22,36 @@
  	</div>
  	
  		<div class="w3-container" align="center">
- 	<h1>Student List</h1>
+ 	<h1>Student List to be graded</h1>
  	<table>
  	<tr><td th:text=${coursename}>Course Name</tr>
  		<tr>
  			<td>Student Name</td><td>Grade</td>
  		</tr>
- 		<tr th:each="stu:${stulist}">
- 			<td th:text=${stu.students}>Student Name</td>
- 			<td th:text=${stu.grade}>Grade</td>
+ 		<tr th:each="stucou:${valistucoulist}">
+ 			<td th:text=${stucou.student}>Student Name</td>
  			
- 			<td><a href="#" th:href="@{/faculty/markgrade/}+${stu.id}"> Mark Grades</a></td>
+ 			<td th:text="${stucou.grade}">Grade</td>
+ 			
+ 			<td><a href="#" th:href="@{/faculty/markgrade/}+${stucou.id}"> Mark Grade</a></td>
+ 			</tr>
+ 			
+ 	</table>
+ 	</div>
+ 	
+ 	 		<div class="w3-container" align="center">
+ 	<h1>Student List reveived grade</h1>
+ 	<table>
+ 	<tr><td th:text=${coursename}>Course Name</tr>
+ 		<tr>
+ 			<td>Student Name</td><td>Grade</td>
+ 		</tr>
+ 		<tr th:each="stucou:${managedstucoulist}">
+ 			<td th:text=${stucou.student}>Student Name</td>
+ 			
+ 			<td th:text="${stucou.grade}">Grade</td>
+ 			
+ 			
  			</tr>
  			
  	</table>

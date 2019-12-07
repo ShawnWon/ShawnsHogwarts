@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>Mark Grade Form</title>
+</head>
+<body>
+
+	
+
+	<form action="/faculty/savegrade" method="get" th:object="${stucou}" th:action="@{/faculty/savegrade}">
+	<fieldset>
+		Course Info: <input type="text" th:field="*{course}" readonly>
+		
+	</fieldset>
+
+	
+	
+    <fieldset>
+		Student Info: <input type="text" th:field="*{student}" readonly>
+		
+	</fieldset>
+	
+	<fieldset>
+		Status: <input type="text" th:field="*{status}" readonly>
+		
+	</fieldset>
+		
+	
+	<fieldset>
+		Grade: <select th:field="*{grade}">
+		<option th:each="gra:${gralist}" th:value="${gra}" th:text="${gra}"></option>
+		</select>
+	</fieldset>
+	
+	<fieldset>
+		<button type="submit">Save</button>
+	</fieldset>
+	
+	</form>
+
+
+</body>
+</html>
