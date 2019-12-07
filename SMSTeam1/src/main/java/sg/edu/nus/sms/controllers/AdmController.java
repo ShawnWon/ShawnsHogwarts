@@ -52,6 +52,7 @@ public class AdmController {
 	@Autowired
 	private StudentCourseRepository stucourepo;
 	
+	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		
@@ -321,5 +322,47 @@ public class AdmController {
 		learepo.save(lea);
 		
 		return "forward:/admin/applicationlist";
+	}
+	
+	//////////////////////////////////Course Application
+	@GetMapping("/courseapplist")
+	public String courseAppList(Model model) {
+	List<StudentCourse> stucoulist=stucourepo.findAll();
+	List<StudentCourse> pendingstucoulist=new ArrayList<StudentCourse>();
+	List<StudentCourse> managedstucoulist=new ArrayList<StudentCourse>();
+	
+	for (StudentCourse stucou:stucoulist)
+	{
+		if(stucou.getStatus().equals("Pending")) 
+			{
+			pendingstucoulist.add(stucou);
+			}
+		else if (stucou.getStatus().equals("Approved")||stucou.getStatus().equals("Rejected"))
+			{
+			managedstucoulist.add(stucou);
+			}
+		
+	}
+	
+	model.addAttribute("pendingstucoulist",pendingstucoulist);
+	model.addAttribute("managedstucoulist",managedstucoulist);
+	return "courseapplist";
+	}
+	
+	@GetMapping("/approvecourseapp/{id}")
+	public String approveCourseApp(@PathVariable("id") Integer id) {
+		StudentCourse stucou=stucourepo.findById(id).get();
+		stucou.setStatus("Approved");
+		stucourepo.save(stucou);
+				
+		return "forward:/admin/courseapplist";
+	}
+	
+	@GetMapping("/rejectcourseapp/{id}")
+	public String rejectCourseApp(@PathVariable("id") Integer id) {
+		StudentCourse stucou=stucourepo.findById(id).get();
+		stucou.setStatus("Rejected");
+		stucourepo.save(stucou);
+		return "forward:/admin/courseapplist";
 	}
 }

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>All Course App List</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+</head>
+<body>
+
+	<div th:fragment="home" class="w3-pale-blue w3-card">
+		<div class="w3-container w3-tangerine">
+			<p class="w3-large" align="center">List of Course App</p>
+		</div>
+	</div>
+ 
+ 	<div class="w3-container" align="center">
+ 		<h1 align="center">List of Course Application</h1>
+ 		
+ 		<a href="#" th:href="@{/admin/studentlist}" >Student List</a><br/>
+ 		<a href="#" th:href="@{/admin/facultylist}" >Faculty List</a><br/>
+		<a href="#" th:href="@{/admin/courselist}" >Course List</a><br/>
+		
+		
+ 	</div>
+ 	
+ 	<div class="w3-container" align="center">
+ 	<h1>Pending Course App List</h1>
+ 	<table>
+ 		<tr>
+ 			<td>Course Info</td><td>Student Name</td><td>Status</td>
+ 		</tr>
+ 		<tr th:each="stucou:${pendingstucoulist}">
+ 		
+ 			
+ 			<td th:text=${stucou.course.toString()}>Course Info</td>
+ 			
+ 			
+ 			<td th:text="${stucou.student.toString()}">Student Name</td>
+ 			
+ 			<td th:text="${stucou.status}">Status</td>
+ 			
+ 			
+ 			<td><a href="#" th:href="@{/admin/approvecourseapp/}+${stucou.id}" >Approve</a></td>
+ 			<td><a href="#" th:href="@{/admin/rejectcourseapp/}+${stucou.id}" >Reject</a></td>
+ 			</tr>
+ 			<tr>
+ 			
+ 			</tr>
+ 	</table>
+ 	</div>
+ 	
+ 	
+ 	 	<div class="w3-container" align="center">
+ 	<h1>All Leave App List</h1>
+ 	<table>
+ 		<tr>
+ 			<td>Course Info</td><td>Student Name</td><td>Status</td>
+ 		</tr>
+ 		<tr th:each="stucou:${managedstucoulist}">
+ 		
+ 			
+ 			<td th:text=${stucou.course.toString()}>Course Info</td>
+ 			
+ 			
+ 			<td th:text="${stucou.student.toString()}">Student Name</td>
+ 			
+ 			<td th:text="${stucou.status}">Status</td>
+ 			
+ 			</tr>
+ 			<tr>
+ 			
+ 			</tr>
+ 	</table>
+ 	</div>
+ 	
+ 	
+ 	<div th:fragment="copyright">
+ 		<p class="w3-wide" align="center">&copy; 2019 ISS, NUS, All Rights Reserved</p>
+ 	</div>
+</body>
+</html>
