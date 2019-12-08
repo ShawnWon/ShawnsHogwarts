@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import sg.edu.nus.sms.model.Course;
@@ -25,6 +26,7 @@ import sg.edu.nus.sms.model.Faculty;
 import sg.edu.nus.sms.model.LeaveApp;
 import sg.edu.nus.sms.model.StudentCourse;
 import sg.edu.nus.sms.model.Students;
+import sg.edu.nus.sms.model.UserSession;
 import sg.edu.nus.sms.repo.CourseRepository;
 import sg.edu.nus.sms.repo.FacultyRepository;
 import sg.edu.nus.sms.repo.LeaveAppRepository;
@@ -32,7 +34,7 @@ import sg.edu.nus.sms.repo.StudentCourseRepository;
 import sg.edu.nus.sms.repo.StudentsRepository;
 
 @Controller
-@SessionAttributes("user")
+@SessionAttributes("usersession")
 @RequestMapping("/admin")
 public class AdmController {
 	
@@ -59,13 +61,15 @@ public class AdmController {
 		
 	}
 	
-	static List dlist= Arrays.asList("Physics","Chemistry","Magic","Literature");
+	static List<String> dlist= Arrays.asList("Physics","Chemistry","Magic","Literature");
 	
 	
 	//////////////////////////////////////////Student
 	
 	@GetMapping("/studentlist")
-	public String liststudents(Model model) {
+	public String liststudents(Model model, @SessionAttribute UserSession usersession) {
+		
+		if(!usersession.getUserType().equals("ADM")) return "forward:/home/logout";
 
 		ArrayList<Students> stulist=new ArrayList<Students>();
 		stulist.addAll(sturepo.findAll());
@@ -136,10 +140,11 @@ public class AdmController {
 	/////////////////////////////////////////////////////faculty
 	
 	@GetMapping("/facultylist")
-	public String listfaculty(Model model) {
-
-		ArrayList<Faculty> faclist=new ArrayList<Faculty>();
-		faclist.addAll(facrepo.findAll());
+	public String listfaculty(Model model,@SessionAttribute UserSession usersession) {
+		if(!usersession.getUserType().equals("ADM")) return "forward:/home/logout";
+		
+		List<Faculty> faclist=new ArrayList<Faculty>();
+		faclist=facrepo.findAll();
 		model.addAttribute("faculties",faclist);
 		return "facultylist";
 	}
@@ -190,10 +195,12 @@ public class AdmController {
 	///////////////////////////////////////////Course
 	
 	@GetMapping("/courselist")
-	public String listcourse(Model model) {
+	public String listcourse(Model model,@SessionAttribute UserSession usersession) {
 
-		ArrayList<Course> coulist=new ArrayList<Course>();
-		coulist.addAll(courepo.findAll());
+		if(!usersession.getUserType().equals("ADM")) return "forward:/home/logout";
+		
+		List<Course> coulist=new ArrayList<Course>();
+		coulist=courepo.findAll();
 		model.addAttribute("courses",coulist);
 		return "courselist";
 	}
@@ -287,12 +294,15 @@ public class AdmController {
 	/////////////////////////////////////////Leave application
 	
 	@GetMapping("/applicationlist")
-	public String listleaveapp(Model model) {
+	public String listleaveapp(Model model, @SessionAttribute UserSession usersession) {
 
-		ArrayList<LeaveApp> lealist=new ArrayList<LeaveApp>();
-		ArrayList<LeaveApp> alllealist=new ArrayList<LeaveApp>();
-		lealist.addAll(learepo.findByStatus("Pending"));
-		alllealist.addAll(learepo.findAll());
+		if(!usersession.getUserType().equals("ADM")) return "forward:/home/logout";
+		
+		
+		List<LeaveApp> lealist=new ArrayList<LeaveApp>();
+		List<LeaveApp> alllealist=new ArrayList<LeaveApp>();
+		lealist=learepo.findAllByStatus("Pending");
+		alllealist=learepo.findAll();
 		model.addAttribute("leaveapps",lealist);
 		model.addAttribute("allleaveapps",alllealist);
 		return "applicationlist";
@@ -341,7 +351,10 @@ public class AdmController {
 	
 	//////////////////////////////////Course Application
 	@GetMapping("/courseapplist")
-	public String courseAppList(Model model) {
+	public String courseAppList(Model model,@SessionAttribute UserSession usersession) {
+		
+	if(!usersession.getUserType().equals("ADM")) return "forward:/home/logout";
+	
 	List<StudentCourse> stucoulist=stucourepo.findAll();
 	List<StudentCourse> pendingstucoulist=new ArrayList<StudentCourse>();
 	List<StudentCourse> managedstucoulist=new ArrayList<StudentCourse>();

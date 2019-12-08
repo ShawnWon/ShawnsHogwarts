@@ -60,6 +60,8 @@ public class FacController {
 	@GetMapping("/assignedcourses")
 	public String assignedCourses(Model model,@SessionAttribute UserSession usersession) {
 		
+		if(!usersession.getUserType().equals("FAC")) return "forward:/home/logout";
+		
 		Faculty fac=facrepo.findById(usersession.getId()).get();
 		ArrayList<Course> mycourses=courepo.findAllByCurrentFaculty(fac);
 		model.addAttribute("mycourses",mycourses);
@@ -88,23 +90,29 @@ public class FacController {
 	
 	
 	@GetMapping("/myleaveapps")
-	public String myLeaveapps(Model model) {
+	public String myLeaveapps(Model model,@SessionAttribute UserSession usersession) {
 
-		ArrayList<LeaveApp> mylealist=new ArrayList<LeaveApp>();
-		mylealist.addAll(learepo.findAll());
+		if(!usersession.getUserType().equals("FAC")) return "forward:/home/logout";
+		Faculty fac=facrepo.findById(usersession.getId()).get();
+		
+		List<LeaveApp> mylealist=new ArrayList<LeaveApp>();
+		mylealist=learepo.findAllByFaculty(fac);
 		model.addAttribute("mleaveapps",mylealist);
 		return "myleaveapps";
 	}
 	
 	@RequestMapping(value="/saveleaveapp",path="/saveleaveapp", method= {RequestMethod.GET, RequestMethod.POST}, produces="text/html")
-	public String saveLeaveApp(@Valid @ModelAttribute LeaveApp lea, BindingResult bindingResult) {
+	public String saveLeaveApp(@Valid @ModelAttribute LeaveApp lea, BindingResult bindingResult, @SessionAttribute UserSession usersession) {
+		
 		
 		if(bindingResult.hasErrors())
 		{
 			return "leaveappform";
 		}
 		
-		Faculty f1=facrepo.findByFirstName("Jon");
+		if(!usersession.getUserType().equals("FAC")) return "forward:/home/logout";
+		
+		Faculty f1=facrepo.findById(usersession.getId()).get();
 		lea.setStatus("Pending");
 		lea.setFaculty(f1);
 		
@@ -120,6 +128,7 @@ public class FacController {
 	////////////////////////////Student grade
 	@GetMapping("/coursestulist/{id}")
 	public String courseStuList(@PathVariable("id") Integer id, Model model,@SessionAttribute UserSession usersession) {
+		if(!usersession.getUserType().equals("FAC")) return "forward:/home/logout";
 		
 		Course cou=courepo.findById(id).get();
 		List<StudentCourse> stucoulist=stucourepo.findAllByCourse(cou);

@@ -14,4 +14,6 @@ public interface FacultyRepository extends JpaRepository<Faculty, Integer> {
 
 	public ArrayList<Faculty> findByDepartment(String department);
 
+	public Object findByUserName(String username);
+
 }

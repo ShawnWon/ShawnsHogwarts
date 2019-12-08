@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="ISO-8859-1">
+<title>My grades</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="w3.css">
+</head>
+<body>
+
+	<div th:fragment="home" class="w3-pale-blue w3-card">
+		<div class="w3-container w3-tangerine">
+			<p class="w3-large" align="center">My Grades</p>
+		</div>
+	</div>
+ 
+ 	<div class="w3-container" align="center">
+ 		<h1 align="center">The courses completed and grades received</h1>
+ 		<a href="#" th:href="@{/student/enrollcourse}" >Enroll Course</a><br/>
+		<a href="#" th:href="@{/home/logout}" >Log out</a><br/>
+
+
+	<div class="w3-container" align="center">
+ 	<h1>Grades received</h1>
+ 	<table>
+ 	<tr><td th:text=${studentname}>Student Name</tr>
+ 		<tr>
+ 			<td>Course Name</td><td>Grade</td>
+ 		</tr>
+ 		<tr th:each="stucou:${compstucoulist}">
+ 			<td th:text=${stucou.course}>Course Name</td>
+ 			
+ 			<td th:text="${stucou.grade}">Grade</td>
+ 			
+ 			</tr>
+ 			
+ 	
+ 			
+ 	</table>
+ 	</div>
+ 	
+ 		<div class="w3-container" align="center">
+ 	<h1>CGPA by now</h1>
+ 	<table>
+ 	<tr><td th:text=${studentname}>Student Name</tr>
+ 		<tr>
+ 			<td>total GPA received</td>
+ 		</tr>
+ 		<tr>	
+ 		<td th:text=${mygpa}>My CGPA</td>
+ 			</tr>
+ 			
+ 			
+ 	
+ 			
+ 	</table>
+ 	</div>
+		 	
+ 	</div>
+ 	
+ 	<div th:fragment="copyright">
+ 		<p class="w3-wide" align="center">&copy; 2019 ISS, NUS, All Rights Reserved</p>
+ 	</div>
+</body>
+</html>

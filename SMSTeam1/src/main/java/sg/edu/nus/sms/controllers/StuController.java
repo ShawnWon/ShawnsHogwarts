@@ -35,10 +35,36 @@ public class StuController {
 	@Autowired
 	private CourseRepository courepo;
 	
-	@GetMapping("/stugrades")
-	public String grades() {
+	@GetMapping("/mygrades")
+	public String mygrades(@SessionAttribute UserSession usersession, Model model) {
 		
-		return "stugrades";
+		if(!usersession.getUserType().equals("STU")||usersession==null) return "forward:/home/logout";
+		
+		
+		Students stu=sturepo.findById(usersession.getId()).get();
+		List<StudentCourse> stucoulist=stucourepo.findAllByStudent(stu);
+		List<StudentCourse> compstucoulist=new ArrayList<StudentCourse>();
+		long mygpa=0;
+		
+		
+		for(StudentCourse sc:stucoulist)
+		{
+			
+			if (sc.getStatus().equals("Graded")) 
+				{
+				compstucoulist.add(sc);
+				if(sc.getGrade().equals("A")) mygpa+=5*sc.getCourse().getCourseUnit();
+				else if (sc.getGrade().equals("B")) mygpa+=4*sc.getCourse().getCourseUnit();
+				else if (sc.getGrade().equals("C")) mygpa+=3*sc.getCourse().getCourseUnit();
+				else if (sc.getGrade().equals("D")) mygpa+=2*sc.getCourse().getCourseUnit();
+				}
+		}
+		
+		
+		model.addAttribute("studentname",stu.toString());
+		model.addAttribute("compstucoulist", compstucoulist);
+		model.addAttribute("cgpa",mygpa);
+		return "mygrades";
 	}
 	
 	@GetMapping("/enrollcourse")

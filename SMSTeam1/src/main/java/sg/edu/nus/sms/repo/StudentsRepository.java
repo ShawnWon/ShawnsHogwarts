@@ -8,4 +8,7 @@ public interface StudentsRepository extends JpaRepository<Students,Integer> {
 
 	Students findByStudentID(int studentID);
 
+	Students findByUserName(String username);
+
+	
 }
