@@ -15,12 +15,15 @@ public class Students extends User{
 	
 	@NotNull
 	private int studentID;
+	
 	@NotEmpty
 	private String firstName;
 	@NotEmpty
 	private String lastName;
 	@NotEmpty
 	private String semester;
+	
+	
 	private int cgpa;
 	
 	@OneToMany(mappedBy="student")

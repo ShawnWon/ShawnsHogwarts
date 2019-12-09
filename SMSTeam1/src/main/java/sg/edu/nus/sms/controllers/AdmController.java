@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.apache.catalina.filters.RequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -69,28 +71,50 @@ public class AdmController {
 	@GetMapping("/studentlist")
 	public String liststudents(Model model, @SessionAttribute UserSession usersession) {
 		
+		
 		if(!usersession.getUserType().equals("ADM")) return "forward:/home/logout";
 
 		ArrayList<Students> stulist=new ArrayList<Students>();
 		stulist.addAll(sturepo.findAll());
 		model.addAttribute("students",stulist);
+		
+		
+		int leacount=learepo.findAllByStatus("Pending").size();
+		int couappcount=stucourepo.findAllByStatus("Pending").size();
+		model.addAttribute("stucount",sturepo.count());
+		model.addAttribute("faccount",facrepo.count());
+		model.addAttribute("coucount",courepo.count());
+		model.addAttribute("leacount",leacount);
+		model.addAttribute("couappcount",couappcount);
+		
+		
 		return "studentlist";
 	}
 	
 	@GetMapping("/addstudent")
 	public String addStudentForm(Model model) {
 		Students stu=new Students();
+		
 		model.addAttribute("student",stu);
+		
+		int leacount=learepo.findAllByStatus("Pending").size();
+		int couappcount=stucourepo.findAllByStatus("Pending").size();
+		model.addAttribute("stucount",sturepo.count());
+		model.addAttribute("faccount",facrepo.count());
+		model.addAttribute("coucount",courepo.count());
+		model.addAttribute("leacount",leacount);
+		model.addAttribute("couappcount",couappcount);
 				
 		return "studentform";
 	}
 	
 	@RequestMapping(value="/savestudent",path="/savestudent", method= {RequestMethod.GET, RequestMethod.POST}, produces="text/html")
-	public String saveStudent(@Valid @ModelAttribute Students stu, BindingResult bindingResult) {
+	public String saveStudent(@Valid @ModelAttribute Students stu, BindingResult bindingResult,Model model) {
 		
 		if(bindingResult.hasErrors())
 		{
-			return "studentform";
+			
+			return "forward:/admin/addstudent";
 		}
 		
 		Students s1= sturepo.findByStudentID(stu.getStudentID());
@@ -116,6 +140,14 @@ public class AdmController {
 	public String editStudentForm(Model model, @PathVariable("id") Integer id) {
 		Students stu=sturepo.findById(id).get();
 		model.addAttribute("student",stu);
+		
+		int leacount=learepo.findAllByStatus("Pending").size();
+		int couappcount=stucourepo.findAllByStatus("Pending").size();
+		model.addAttribute("stucount",sturepo.count());
+		model.addAttribute("faccount",facrepo.count());
+		model.addAttribute("coucount",courepo.count());
+		model.addAttribute("leacount",leacount);
+		model.addAttribute("couappcount",couappcount);
 				
 		return "studentform";
 	}
@@ -146,6 +178,16 @@ public class AdmController {
 		List<Faculty> faclist=new ArrayList<Faculty>();
 		faclist=facrepo.findAll();
 		model.addAttribute("faculties",faclist);
+
+		
+		int leacount=learepo.findAllByStatus("Pending").size();
+		int couappcount=stucourepo.findAllByStatus("Pending").size();
+		model.addAttribute("stucount",sturepo.count());
+		model.addAttribute("faccount",facrepo.count());
+		model.addAttribute("coucount",courepo.count());
+		model.addAttribute("leacount",leacount);
+		model.addAttribute("couappcount",couappcount);
+		
 		return "facultylist";
 	}
 	
@@ -155,6 +197,14 @@ public class AdmController {
 		Faculty fac=new Faculty();
 		model.addAttribute("faculty",fac);
 		model.addAttribute("departmentlist",dlist);
+		
+		int leacount=learepo.findAllByStatus("Pending").size();
+		int couappcount=stucourepo.findAllByStatus("Pending").size();
+		model.addAttribute("stucount",sturepo.count());
+		model.addAttribute("faccount",facrepo.count());
+		model.addAttribute("coucount",courepo.count());
+		model.addAttribute("leacount",leacount);
+		model.addAttribute("couappcount",couappcount);
 		return "facultyform";
 	}
 	
@@ -164,6 +214,14 @@ public class AdmController {
 		
 		model.addAttribute("departmentlist",dlist);
 		model.addAttribute("faculty",fac);
+		
+		int leacount=learepo.findAllByStatus("Pending").size();
+		int couappcount=stucourepo.findAllByStatus("Pending").size();
+		model.addAttribute("stucount",sturepo.count());
+		model.addAttribute("faccount",facrepo.count());
+		model.addAttribute("coucount",courepo.count());
+		model.addAttribute("leacount",leacount);
+		model.addAttribute("couappcount",couappcount);
 				
 		return "facultyform";
 	}
@@ -181,7 +239,7 @@ public class AdmController {
 		
 		if(bindingResult.hasErrors())
 		{
-			return "facultyform";
+			return "forward:/admin/addfaculty";
 		}
 		
         Faculty f1= facrepo.findByFacultyID(fac.getFacultyID());
@@ -202,6 +260,18 @@ public class AdmController {
 		List<Course> coulist=new ArrayList<Course>();
 		coulist=courepo.findAll();
 		model.addAttribute("courses",coulist);
+		
+		int leacount=learepo.findAllByStatus("Pending").size();
+		int couappcount=stucourepo.findAllByStatus("Pending").size();
+		model.addAttribute("stucount",sturepo.count());
+		model.addAttribute("faccount",facrepo.count());
+		model.addAttribute("coucount",courepo.count());
+		model.addAttribute("leacount",leacount);
+		model.addAttribute("couappcount",couappcount);
+		
+		
+		
+		
 		return "courselist";
 	}
 	
@@ -215,7 +285,13 @@ public class AdmController {
 		model.addAttribute("departmentlist",dlist);
 		model.addAttribute("course",cou);
 		
-		
+		int leacount=learepo.findAllByStatus("Pending").size();
+		int couappcount=stucourepo.findAllByStatus("Pending").size();
+		model.addAttribute("stucount",sturepo.count());
+		model.addAttribute("faccount",facrepo.count());
+		model.addAttribute("coucount",courepo.count());
+		model.addAttribute("leacount",leacount);
+		model.addAttribute("couappcount",couappcount);
 				
 		return "courseform";
 	}
@@ -239,6 +315,16 @@ public class AdmController {
 		
 		model.addAttribute("departmentlist",dlist);
 		model.addAttribute("course",cou);
+		
+		
+		int leacount=learepo.findAllByStatus("Pending").size();
+		int couappcount=stucourepo.findAllByStatus("Pending").size();
+		model.addAttribute("stucount",sturepo.count());
+		model.addAttribute("faccount",facrepo.count());
+		model.addAttribute("coucount",courepo.count());
+		model.addAttribute("leacount",leacount);
+		model.addAttribute("couappcount",couappcount);
+		
 		return "courseform";
 	}
 	
@@ -264,7 +350,7 @@ public class AdmController {
 		
 		if(bindingResult.hasErrors())
 		{
-			return "courseform";
+			return "forward:/admin/addcourse";
 		}
 		
 		Course c1= courepo.findByCourseCode(cou.getCourseCode());
@@ -305,6 +391,19 @@ public class AdmController {
 		alllealist=learepo.findAll();
 		model.addAttribute("leaveapps",lealist);
 		model.addAttribute("allleaveapps",alllealist);
+		
+		
+		int leacount=learepo.findAllByStatus("Pending").size();
+		int couappcount=stucourepo.findAllByStatus("Pending").size();
+		model.addAttribute("stucount",sturepo.count());
+		model.addAttribute("faccount",facrepo.count());
+		model.addAttribute("coucount",courepo.count());
+		model.addAttribute("leacount",leacount);
+		model.addAttribute("couappcount",couappcount);
+		
+		
+		
+		
 		return "applicationlist";
 	}
 	
@@ -374,6 +473,18 @@ public class AdmController {
 	
 	model.addAttribute("pendingstucoulist",pendingstucoulist);
 	model.addAttribute("managedstucoulist",managedstucoulist);
+	
+	
+	int leacount=learepo.findAllByStatus("Pending").size();
+	int couappcount=stucourepo.findAllByStatus("Pending").size();
+	model.addAttribute("stucount",sturepo.count());
+	model.addAttribute("faccount",facrepo.count());
+	model.addAttribute("coucount",courepo.count());
+	model.addAttribute("leacount",leacount);
+	model.addAttribute("couappcount",couappcount);
+	
+	
+	
 	return "courseapplist";
 	}
 	

@@ -3,10 +3,57 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Mark Grade Form</title>
+
+
+<style> 
+input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: none;
+  background-color: #f1f1f1;
+  color: grey;
+}
+
+  
+select {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing:border-box;
+  border: none;
+  border-radius: 4px;
+  background-color: #f1f1f1;
+}
+
+form{
+margin:0 auto;
+width:500px;}
+
+.button {
+  background-color: #555555;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+</style>
 </head>
 <body>
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-bar-item w3-right">Hogwarts School Management System</span>
+</div>
 
-	
+
+	<div>
 
 	<form action="/faculty/savegrade" method="get" th:object="${stucou}" th:action="@{/faculty/savegrade}">
 	<fieldset>
@@ -34,11 +81,11 @@
 	</fieldset>
 	
 	<fieldset>
-		<button type="submit">Save</button>
+		<button type="submit" class="button">Save</button>
 	</fieldset>
 	
 	</form>
-
+</div>
 
 </body>
 </html>

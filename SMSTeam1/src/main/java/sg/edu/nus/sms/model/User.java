@@ -21,6 +21,7 @@ public class User {
 	private int id;
 	@NotEmpty
 	private String userName;
+	
 	private String passWord;
 	
 	

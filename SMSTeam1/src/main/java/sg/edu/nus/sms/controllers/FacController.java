@@ -65,19 +65,31 @@ public class FacController {
 		Faculty fac=facrepo.findById(usersession.getId()).get();
 		ArrayList<Course> mycourses=courepo.findAllByCurrentFaculty(fac);
 		model.addAttribute("mycourses",mycourses);
+		
+		model.addAttribute("mydepart",fac.getDepartment());
+		model.addAttribute("mycourse",courepo.findAllByCurrentFaculty(fac).size());
+		model.addAttribute("myleaves",learepo.findAllByFaculty(fac).size());
+		
+		
 		return "assignedcourses";
 	}
 	
 	///////////////////////////////////Leave Application
 	@GetMapping("/addleaveapp")
-	public String addLeaveAppForm(Model model) {
+	public String addLeaveAppForm(Model model,@SessionAttribute UserSession usersession) {
 		LeaveApp leaapp=new LeaveApp();
-		Faculty f1=facrepo.findByFirstName("Jon");
+		Faculty f1=facrepo.findById(usersession.getId()).get();
 		
 		leaapp.setFaculty(f1);
 		
 		model.addAttribute("leaveapp",leaapp);
 		model.addAttribute("facutly",f1);		
+		
+		
+		model.addAttribute("mydepart",f1.getDepartment());
+		model.addAttribute("mycourse",courepo.findAllByCurrentFaculty(f1).size());
+		model.addAttribute("myleaves",learepo.findAllByFaculty(f1).size());
+		
 		return "leaveappform";
 	}
 	
@@ -98,6 +110,13 @@ public class FacController {
 		List<LeaveApp> mylealist=new ArrayList<LeaveApp>();
 		mylealist=learepo.findAllByFaculty(fac);
 		model.addAttribute("mleaveapps",mylealist);
+		
+		model.addAttribute("mydepart",fac.getDepartment());
+		model.addAttribute("mycourse",courepo.findAllByCurrentFaculty(fac).size());
+		model.addAttribute("myleaves",learepo.findAllByFaculty(fac).size());
+		
+		
+		
 		return "myleaveapps";
 	}
 	
@@ -105,9 +124,10 @@ public class FacController {
 	public String saveLeaveApp(@Valid @ModelAttribute LeaveApp lea, BindingResult bindingResult, @SessionAttribute UserSession usersession) {
 		
 		
+		
 		if(bindingResult.hasErrors())
 		{
-			return "leaveappform";
+			return "forward:/faculty/addleaveapp";
 		}
 		
 		if(!usersession.getUserType().equals("FAC")) return "forward:/home/logout";
@@ -145,6 +165,17 @@ public class FacController {
 		model.addAttribute("coursename",cou.getCourseName());
 		model.addAttribute("valistucoulist",valistucoulist);
 		model.addAttribute("managedstucoulist",managedstucoulist);
+		
+		Faculty fac=facrepo.findById(usersession.getId()).get();
+		model.addAttribute("mydepart",fac.getDepartment());
+		model.addAttribute("mycourse",courepo.findAllByCurrentFaculty(fac).size());
+		model.addAttribute("myleaves",learepo.findAllByFaculty(fac).size());
+		
+		model.addAttribute("valistucount", valistucoulist.size());
+		model.addAttribute("managedstucount", managedstucoulist.size());
+		
+		
+		
 		
 		return "coursestulist";
 	}

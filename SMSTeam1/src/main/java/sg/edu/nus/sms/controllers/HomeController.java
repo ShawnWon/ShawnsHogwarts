@@ -1,6 +1,7 @@
 package sg.edu.nus.sms.controllers;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,16 +59,19 @@ public class HomeController {
 	}
 
 	@RequestMapping(value="/authenticate", path="/authenticate",method= {RequestMethod.GET, RequestMethod.POST}, produces="text/html")
-	public String getAuthentication(@ModelAttribute("user") User user, HttpSession session, BindingResult bindingResult)
+	public String getAuthentication(@Valid @ModelAttribute User user, BindingResult bindingResult, HttpSession session)
 	{
-		User u1= userrepo.findByUserName(user.getUserName());
 		
-		if(u1!=null) user.setId(u1.getId());
 		
 		
 		if(bindingResult.hasErrors()) {
 			return "login";
 		}
+		
+		
+		User u1= userrepo.findByUserName(user.getUserName());
+		if(u1!=null) user.setId(u1.getId());
+		
 		
 		String username=user.getUserName();
 		String usertype;

@@ -17,6 +17,9 @@ public interface CourseRepository extends JpaRepository<Course,Integer> {
 
 	public ArrayList<Course> findAllByCurrentFaculty(Faculty fac);
 
+
+
+
 	
 
 	

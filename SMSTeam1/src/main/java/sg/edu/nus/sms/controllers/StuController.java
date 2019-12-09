@@ -63,7 +63,10 @@ public class StuController {
 		
 		model.addAttribute("studentname",stu.toString());
 		model.addAttribute("compstucoulist", compstucoulist);
-		model.addAttribute("cgpa",mygpa);
+		model.addAttribute("mygpa",mygpa);
+		
+		model.addAttribute("mysemester", stu.getSemester());
+		model.addAttribute("mycourseenrolled", stucourepo.findAllByStudent(stu).size());
 		return "mygrades";
 	}
 	
@@ -86,6 +89,10 @@ public class StuController {
 		}
 		model.addAttribute("availcourses",availcourses);
 		model.addAttribute("mycourseapps",mycourseapp);
+
+		model.addAttribute("mysemester", stu.getSemester());
+		model.addAttribute("mycourseenrolled", stucourepo.findAllByStudent(stu).size());
+		
 		return "availablecourse";
 	}
 	

@@ -17,6 +17,9 @@ public interface StudentCourseRepository extends JpaRepository<StudentCourse, In
 
 	StudentCourse findByCourseAndStudent(Course course, Students students);
 
+	List<StudentCourse> findAllByStatus(String status);
+
+
 	
 
 	
